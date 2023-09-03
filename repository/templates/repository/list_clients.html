@@ -1,0 +1,47 @@
+{% extends 'repository/base.html' %}
+
+{% block content %}
+    {% if user.id != dir.user.id %}
+        <div style="text-align: center">
+            <h2>No tens autorització per accedir a aquesta pàgina</h2>
+        </div>
+    {% else %}
+        <a href="{% url 'repository:dir_admin' dir.id %}">
+            <h1 style="font-size: 45px; text-align: center ">{{ dir.name }}</h1>
+        </a>
+
+        <h2>Suggeriment de format:</h2>
+        <form method="POST" action="{% url 'repository:admin_clients' dir.id %}">
+            {% csrf_token %}
+            <input style="float: left; width: 75%; margin-right: 5px" type="text" id="suggestion" name="suggestion"
+                   class="form-control"
+                   placeholder="{% if dir.suggestion %}{{ dir.suggestion }}
+                            {% else %} Afegeix un suggeriment de format{% endif %}"/>
+            <input type="submit" class="btn btn-success" style="float: left" value="Actualitza"/>
+        </form>
+        <br><br>
+
+        <h2>LLista de clients:</h2>
+        {% if clients %}
+            {% for c in clients %}
+                <div>
+                    <p style="border-style: groove; font-size: 20px; float: left; text-align: center; width: 80%">{{ c.key_words }}</p>
+                    <a href="{% url 'repository:delete_client' dir.id c.id %}">
+                        <img src="/directories/special/delete_icon.png" alt="Delete icon"
+                             style="width: 30px; vertical-align: middle; float: left; text-align: center">
+                    </a>
+                </div>
+            {% endfor %}
+            <p style="clear: both;">
+
+                {% else %}
+            <p>Aquest directori no té cap client.</p>
+        {% endif %}
+        <div class="text-center">
+            <a class="btn btn-primary" style="float: left; margin-right: 3px" href={% url 'repository:add_client' dir.id %}>Afegir
+                Clients</a>
+            <a class="btn btn-primary" style="float: left;" href={% url 'repository:create_pass' dir.id %}>Crear un pase d'accés únic</a>
+        </div>
+
+    {% endif %}
+{% endblock %}

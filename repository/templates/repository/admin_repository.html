@@ -1,0 +1,46 @@
+{% extends 'repository/base.html' %}
+
+{% block content %}
+    {% if user.id != dir.user.id %}
+        <div style="text-align: center">
+            <h2>No tens autorització per accedir a aquesta pàgina</h2>
+        </div>
+    {% else %}
+        <h1 style="font-size: 45px; text-align: center ">{{ dir.name }} (Admin)</h1>
+        <br>
+        {% if content %}
+            <ul>
+                {% for c in content %}
+                    <a href="{% url 'repository:delete_content' dir.id c.id %}">
+                        <img src="{{ c.image.url }}" alt="Uploaded image"
+                             style="float: left; width: 19%; margin-right: 1%; margin-bottom: 0.5em;">
+                    </a>
+                {% endfor %}
+                <p style="clear: both;">
+            </ul>
+        {% else %}
+            <br>
+            <h4>Encara no s'ha penjat cap imatge en aquest directori.</h4>
+        {% endif %}
+
+        <div><br/>
+            <div style="float: left; width: 25%; text-align: center"><br/><br/><a
+                    href={% url 'repository:admin_clients' dir.id %}>
+                <button class="btn btn-primary">Editar llista de Clients</button>
+            </a></div>
+            <div style="float: left; width: 50%; text-align: center">
+                <h3>Afegir una imatge al directori:</h3>
+                <form method="POST" action="{% url 'repository:dir_admin' dir.id %}" enctype='multipart/form-data'>
+                    {% csrf_token %}
+                    <input type="file" id="image" name="image" accept="image/*"/>
+                    <br><br>
+                    <input type="submit" class="btn btn-success"/>
+                </form>
+            </div>
+            <div style="float: left; width: 25%; text-align: center"><br/><br/><a
+                    href={% url 'repository:check_history' dir.id %}>
+                <button class="btn btn-primary">Comprovar historial d'accessos</button>
+            </a></div>
+        </div>
+    {% endif %}
+{% endblock %}

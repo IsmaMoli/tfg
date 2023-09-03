@@ -1,0 +1,27 @@
+{% extends 'repository/base.html' %}
+
+{% block content %}
+    {% if messages %}
+        {% for message in messages %}
+
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+        {% endfor %}
+    {% endif %}
+
+    <h3>Situa el teu document(credencials) al requadre verd:</h3>
+    <div style="text-align: center">
+        <img src="{% url 'idverification:video_feed' %}" width="500">
+        <div style="text-align: center"><br/><br/><a
+                href={% url 'idverification:check_complete' %}>
+            <button class="btn btn-success">Continuar</button>
+        </a></div>
+
+    </div>
+
+
+
+{% endblock %}

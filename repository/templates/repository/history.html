@@ -1,0 +1,33 @@
+{% extends 'repository/base.html' %}
+
+{% block content %}
+    {% if user.id != dir.user.id %}
+        <div style="text-align: center">
+            <h2>No tens autorització per accedir a aquesta pàgina</h2>
+        </div>
+    {% else %}
+        <a href="{% url 'repository:dir_admin' dir.id %}">
+            <h1 style="font-size: 45px; text-align: center ">{{ dir.name }}</h1>
+        </a>
+        <h2>Últims intents realitzats:</h2>
+        {% if attempt_client %}
+            {% for a,c in attempt_client %}
+                <div style="display: inline-block">
+                    <p style="border-style: groove; font-size: 20px; float: left; text-align: center; width: 80%">
+                        {{ a.time|date:'d-m-Y' }} a les {{ a.time|date:'H:i:s' }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        Intent del client {{ c.key_words }}</p>
+
+                    <a class="btn btn-outline-primary" style="vertical-align: center; height: 35px; float: left"
+                       href="{% url 'repository:attempt_detail' a.id %}">Veure intent</a>
+                </div>
+            {% endfor %}
+            <p style="clear: both;">
+
+                {% else %}
+            <div class="text-center">
+                <br>
+                <h4>Encara no s'ha fet cap intent d'inici de sessió.</h4>
+            </div>
+        {% endif %}
+    {% endif %}
+{% endblock %}

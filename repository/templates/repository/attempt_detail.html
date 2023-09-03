@@ -1,0 +1,58 @@
+{% extends 'repository/base.html' %}
+
+{% block content %}
+    {% if user.id != dir.user.id %}
+        <div style="text-align: center">
+            <h2>No tens autorització per accedir a aquesta pàgina</h2>
+        </div>
+    {% else %}
+        <a href="{% url 'repository:dir_admin' dir.id %}">
+            <h1 style="font-size: 45px; text-align: center ">{{ dir.name }}</h1>
+        </a>
+        <br>
+        <div>
+            <div style="width: 49%; float: left">
+                <h3>Credencials del client <a
+                        href="{% url 'repository:client_detail' dir.id client.id %}">{{ client.key_words }}:</a></h3>
+                <br>
+                {% if client.credentials %}
+                    <img src="{{ client.credentials.url }}" alt="Credentials image"
+                         style="float: left; width: 90%; margin-right: 1%; margin-bottom: 0.5em;">
+                {% else %}
+                    <h4>El client no té les credencials actualitzades</h4>
+                    <br>
+                {% endif %}
+            </div>
+            <div style="width: 49%; float: right">
+                <h3> Realitzat el dia {{ attempt.time|date:'d-m-Y' }} a les {{ attempt.time|date:'H:i:s' }}:</h3>
+                <img src="{{ attempt.face_frame.url }}" alt="Face image"
+                     style="float: left; height: 180px; margin-right: 1%; margin-bottom: 0.5em; vertical-align: center">
+                <img src="{{ attempt.id_frame.url }}" alt="ID image"
+                     style="float: left; height: 180px; margin-right: 1%; margin-bottom: 0.5em; vertical-align: center">
+                {% if attempt.failed_frame1 or attempt.failed_frame2 or attempt.failed_frame3 or attempt.failed_frame4 or attempt.failed_frame5 %}
+                    <h4>Imatges d'altres rostres detectats:</h4>
+                {% endif %}
+                {% if attempt.failed_frame1 %}
+                    <img src="{{ attempt.failed_frame1.url }}" alt="Failed frame 1"
+                         style="float: left; width: 48%; margin-right: 1%; margin-bottom: 0.5em;">
+                {% endif %}
+                {% if attempt.failed_frame2 %}
+                    <img src="{{ attempt.failed_frame2.url }}" alt="Failed frame 2"
+                         style="float: left; width: 48%; margin-right: 1%; margin-bottom: 0.5em;">
+                {% endif %}
+                {% if attempt.failed_frame3 %}
+                    <img src="{{ attempt.failed_frame3.url }}" alt="Failed frame 3"
+                         style="float: left; width: 32%; margin-right: 1%; margin-bottom: 0.5em;">
+                {% endif %}
+                {% if attempt.failed_frame4 %}
+                    <img src="{{ attempt.failed_frame4.url }}" alt="Failed frame 4"
+                         style="float: left; width: 32%; margin-right: 1%; margin-bottom: 0.5em;">
+                {% endif %}
+                {% if attempt.failed_frame5 %}
+                    <img src="{{ attempt.failed_frame5.url }}" alt="Failed frame 5"
+                         style="float: left; width: 32%; margin-right: 1%; margin-bottom: 0.5em;">
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

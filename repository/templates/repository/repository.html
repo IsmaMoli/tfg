@@ -1,0 +1,18 @@
+{% extends 'repository/base.html' %}
+
+{% block content %}
+        <h1 style="font-size: 45px; text-align: center ">{{ dir.name }}</h1>
+        {% if content %}
+            <ul>
+                {% for c in content %}
+                    <img src="{{ c.image.url }}" alt="Uploaded image"
+                         style="float: left; width: 19%; margin-right: 1%; margin-bottom: 0.5em;">
+                {% endfor %}
+                <p style="clear: both;">
+            </ul>
+        {% else %}
+            <p>Encara no s'ha penjat cap imatge en aquest directori.</p>
+        {% endif %}
+
+
+{% endblock %}

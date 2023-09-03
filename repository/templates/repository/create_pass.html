@@ -1,0 +1,23 @@
+{% extends 'repository/base.html' %}
+
+{% block content %}
+    {% if user.id != dir.user.id %}
+        <div style="text-align: center">
+            <h2>No tens autorització per accedir a aquesta pàgina</h2>
+        </div>
+    {% else %}
+        <a href="{% url 'repository:dir_admin' dir.id %}">
+            <h1 style="font-size: 45px; text-align: center ">{{ dir.name }}</h1>
+        </a>
+        <h2>Crea un accés d'un sol cop:</h2>
+        <form method="POST" action="">
+            {% csrf_token %}
+            <label for="exampleFormControlInput1" class="form-label">Afegeix una o varies paraules de confirmació:</label>
+            <input type="text" id="passcode" name="passcode" class="form-control"/>
+            <br>
+            <div class="text-center">
+                <input type="submit" class="btn btn-success col text-center" style="text-align: center"/>
+            </div>
+        </form>
+    {% endif %}
+{% endblock %}
