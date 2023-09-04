@@ -115,7 +115,7 @@ class Face_camera_check():
         cv2.rectangle(frame, [150, 400], [470, 445], (0, 0, 0), -1)
         cv2.putText(frame, self.message, [165, 430], cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
 
-        if (self.message == "Rostre Desconegut" and self.n % 20 and len(self.faces)<5):
+        if (self.message == "Rostre Desconegut" and (self.n % 20)==0 and len(self.faces)<5):
             self.faces.append(frame)
 
 

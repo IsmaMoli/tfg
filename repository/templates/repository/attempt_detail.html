@@ -30,7 +30,7 @@
                 <img src="{{ attempt.id_frame.url }}" alt="ID image"
                      style="float: left; height: 180px; margin-right: 1%; margin-bottom: 0.5em; vertical-align: center">
                 {% if attempt.failed_frame1 or attempt.failed_frame2 or attempt.failed_frame3 or attempt.failed_frame4 or attempt.failed_frame5 %}
-                    <h4>Imatges d'altres rostres detectats:</h4>
+                    <br><br><br><br><br><br><br><br><br><h4>Imatges d'altres rostres detectats:</h4>
                 {% endif %}
                 {% if attempt.failed_frame1 %}
                     <img src="{{ attempt.failed_frame1.url }}" alt="Failed frame 1"

@@ -1,8 +1,9 @@
 import os
+import shutil
 
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from repository.models import Directory, Client, UniquePass, LoginAttempt
+from repository.models import *
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
 from django.contrib import messages
@@ -231,44 +232,7 @@ def check_complete2(request):
     global id_frame_g
 
     if user_id_g != dir.user.id:
-        client = client = Client.objects.get(user=user)
-
-        num_attempt = LoginAttempt.objects.filter(client=client).count()
-
-        id_path = 'attempts/client_' + str(client.id) + '/attempt' + str(num_attempt) + '/id_frame.jpg'
-        face_path = 'attempts/client_' + str(client.id)+ '/attempt' + str(num_attempt) + '/face_frame.jpg'
-
-        result = cv2.imwrite(id_path, id_frame_g)
-        cv2.imwrite(face_path, face_frame_g)
-        attempt = LoginAttempt.objects.create(client=Client.objects.get(user=user),
-                                              id_frame=id_path,
-                                              face_frame=face_path)
-
-        global other_faces_g
-
-        if other_faces_g is not None:
-            if len(other_faces_g) > 0:
-                path_img = 'attempts/client_' + str(client.id) + '/attempt' + str(num_attempt) + '/failed_face1.jpg'
-                cv2.imwrite(path_img, other_faces_g[0])
-                attempt.failed_frame1 = path_img
-            if len(other_faces_g) > 1:
-                path_img = 'attempts/client_' + str(client.id) + '/attempt' + str(num_attempt) + '/failed_face2.jpg'
-                cv2.imwrite(path_img, other_faces_g[1])
-                attempt.failed_frame2 = path_img
-            if len(other_faces_g) > 2:
-                path_img = 'attempts/client_' + str(client.id) + '/attempt' + str(num_attempt) + '/failed_face3.jpg'
-                cv2.imwrite(path_img, other_faces_g[2])
-                attempt.failed_frame3 = path_img
-            if len(other_faces_g) > 3:
-                path_img = 'attempts/client_' + str(client.id) + '/attempt' + str(num_attempt) + '/failed_face4.jpg'
-                cv2.imwrite(path_img, other_faces_g[3])
-                attempt.failed_frame4 = path_img
-            if len(other_faces_g) > 4:
-                path_img = 'attempts/client_' + str(client.id) + '/attempt' + str(num_attempt) + '/failed_face5.jpg'
-                cv2.imwrite(path_img, other_faces_g[4])
-                attempt.failed_frame5 = path_img
-
-        attempt.save()
+        save_attempt(request, user)
 
     global camera_g
     camera_g.__del__()
@@ -278,6 +242,55 @@ def check_complete2(request):
         return redirect("repository:dir_admin", dir_id=dir_id_g)
     else:
         return redirect("repository:dir_content", dir_id=dir_id_g)
+
+
+def save_attempt(request, user):
+    client = Client.objects.get(user=user)
+    dir_name = client.directory.name
+
+    num_attempt = LoginAttempt.objects.count()
+
+    attempt_path = os.path.join("C:/Users/User/Desktop/Uni/tfg/directories/"+dir_name+"/attempt_"+str(num_attempt))
+    os.mkdir(attempt_path)
+    result = True
+
+    id_path = os.path.join(attempt_path, "id_frame.jpg")
+    result = result and cv2.imwrite(id_path, id_frame_g)
+
+    face_path = os.path.join(attempt_path, "face_frame.jpg")
+    result = result and cv2.imwrite(face_path, face_frame_g)
+
+    global other_faces_g
+
+    failed_frame1_path, failed_frame2_path, failed_frame3_path, failed_frame4_path, failed_frame5_path = None, None, None, None, None
+
+    if other_faces_g is not None:
+        if len(other_faces_g) > 0:
+            failed_frame1_path = os.path.join(attempt_path, "failed_frame1.jpg")
+            result = result and cv2.imwrite(failed_frame1_path, other_faces_g[0])
+        if len(other_faces_g) > 1:
+            failed_frame2_path = os.path.join(attempt_path, "failed_frame2.jpg")
+            result = result and cv2.imwrite(failed_frame2_path, other_faces_g[1])
+        if len(other_faces_g) > 2:
+            failed_frame3_path = os.path.join(attempt_path, "failed_frame3.jpg")
+            result = result and cv2.imwrite(failed_frame3_path, other_faces_g[2])
+        if len(other_faces_g) > 3:
+            failed_frame4_path = os.path.join(attempt_path, "failed_frame4.jpg")
+            result = result and cv2.imwrite(failed_frame4_path, other_faces_g[3])
+        if len(other_faces_g) > 4:
+            failed_frame5_path = os.path.join(attempt_path, "failed_frame5.jpg")
+            result = result and cv2.imwrite(failed_frame5_path, other_faces_g[4])
+
+    if not result:
+        messages.success(request, "Error desant les imatges")
+        return redirect("idverification:identity_check2")
+    else:
+        attempt = LoginAttempt.objects.create(client=client, face_frame=face_path, id_frame=id_path,
+                                              failed_frame1=failed_frame1_path, failed_frame2=failed_frame2_path,
+                                              failed_frame3=failed_frame3_path, failed_frame4=failed_frame4_path,
+                                              failed_frame5=failed_frame5_path)
+        attempt.save()
+    #shutil.rmtree(attempt_path)
 
 
 def video_feed2(request):

@@ -73,13 +73,13 @@ class Client(models.Model):
 class LoginAttempt(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     time = models.DateTimeField(auto_now=True)
-    id_frame = models.ImageField(upload_to=client_id_directory_path)
-    face_frame = models.ImageField(upload_to=client_face_directory_path)
-    failed_frame1 = models.ImageField(upload_to=client_failed_directory_path, blank=True)
-    failed_frame2 = models.ImageField(upload_to=client_failed_directory_path, blank=True)
-    failed_frame3 = models.ImageField(upload_to=client_failed_directory_path, blank=True)
-    failed_frame4 = models.ImageField(upload_to=client_failed_directory_path, blank=True)
-    failed_frame5 = models.ImageField(upload_to=client_failed_directory_path, blank=True)
+    id_frame = models.ImageField(upload_to=client_id_directory_path, blank=True, null=True)
+    face_frame = models.ImageField(upload_to=client_face_directory_path, blank=True, null=True)
+    failed_frame1 = models.ImageField(upload_to=client_failed_directory_path, blank=True, null=True)
+    failed_frame2 = models.ImageField(upload_to=client_failed_directory_path, blank=True, null=True)
+    failed_frame3 = models.ImageField(upload_to=client_failed_directory_path, blank=True, null=True)
+    failed_frame4 = models.ImageField(upload_to=client_failed_directory_path, blank=True, null=True)
+    failed_frame5 = models.ImageField(upload_to=client_failed_directory_path, blank=True, null=True)
 
     def __str__(self):
         return ("Attempt of " + self.client.key_words + self.time.strftime(" on %d/%m/%Y at %H:%M:%S"))
