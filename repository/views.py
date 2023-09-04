@@ -16,9 +16,9 @@ def dir_content(request, dir_id):
 def dir_admin(request, dir_id):
     dir = get_object_or_404(Directory, id=dir_id)
 
-    if request.FILES:
+    if request.FILES.get('image'):
         img = request.FILES.get('image')
-        new = Content.objects.create(directory=dir, image=img)
+        Content.objects.create(directory=dir, image=img)
 
     content = Content.objects.filter(directory=dir)
     return render(request, "repository/admin_repository.html", {"content": content, "dir": dir})

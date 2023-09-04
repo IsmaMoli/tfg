@@ -1,6 +1,4 @@
-import os
 import time
-import sys
 
 import cv2
 import easyocr
@@ -8,6 +6,7 @@ import face_recognition
 
 MAX_FEATURES = 500
 GOOD_MATCH_PERCENT = 0.15
+
 
 def extract_letters(img_path):
     try:
@@ -24,8 +23,8 @@ def extract_letters(img_path):
             if not known_encoding:
                 return "no face"
 
-        #gray = cv2.cvtColor(id_img, cv2.COLOR_BGR2GRAY)
-        #clean = cv2.fastNlMeansDenoising(src=gray, h=3, dst=None, templateWindowSize=3, searchWindowSize=7)
+        # gray = cv2.cvtColor(id_img, cv2.COLOR_BGR2GRAY)
+        # clean = cv2.fastNlMeansDenoising(src=gray, h=3, dst=None, templateWindowSize=3, searchWindowSize=7)
         reader = easyocr.Reader(['es', 'en'], gpu=True)
         detected_text = reader.readtext(id_img, detail=0)
 
@@ -51,6 +50,7 @@ def check_face(img_path):
             return False
     return True
 
+
 class Id_camera_checker():
     def __init__(self, reference):
         id_img = cv2.imread(reference)
@@ -66,8 +66,7 @@ class Id_camera_checker():
         self.keypoints1, self.descriptors1 = self.sift.detectAndCompute(id_grey, None)
 
         self.bf = cv2.BFMatcher(cv2.NORM_L1, crossCheck=True)
-        self.max_confidence =0
-
+        self.max_confidence = 0
 
     def process_frame(self, frame):
 
@@ -86,16 +85,16 @@ class Id_camera_checker():
             matches = sorted(matches, key=lambda x: x.distance)
             num_good_matches = int(len(matches) * GOOD_MATCH_PERCENT)
             cv2.rectangle(frame_target, [120, 400], [540, 445], (0, 0, 0), -1)
-            cv2.putText(frame_target, "Nivell de coincidencia: " + str(num_good_matches*3), [130, 430],
+            cv2.putText(frame_target, "Nivell de coincidencia: " + str(num_good_matches * 3), [130, 430],
                         cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
-            self.max_confidence = max(self.max_confidence, num_good_matches*3)
+            self.max_confidence = max(self.max_confidence, num_good_matches * 3)
 
         ret, jpeg = cv2.imencode('.jpg', frame_target)
-        return [num_good_matches >= 33,  jpeg.tobytes(), frame]
+        return [num_good_matches >= 33, jpeg.tobytes(), frame]
 
 
 class Face_camera_check():
-    def __init__(self,reference):
+    def __init__(self, reference):
         id_img = cv2.imread(reference)
 
         self.known_encoding = face_recognition.face_encodings(id_img)
@@ -115,13 +114,12 @@ class Face_camera_check():
         cv2.rectangle(frame, [150, 400], [470, 445], (0, 0, 0), -1)
         cv2.putText(frame, self.message, [165, 430], cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
 
-        if (self.message == "Rostre Desconegut" and (self.n % 20)==0 and len(self.faces)<5):
+        if (self.message == "Rostre Desconegut" and (self.n % 20) == 0 and len(self.faces) < 5):
             self.faces.append(frame)
-
 
         self.n += 1
         ret, jpeg = cv2.imencode('.jpg', frame)
-        return [self.message=="Ok! Finalitza", jpeg.tobytes(), self.faces, frame]
+        return [self.message == "Ok! Finalitza", jpeg.tobytes(), self.faces, frame]
 
 
 def check_match(known_encoding, frame):
@@ -142,6 +140,7 @@ def check_match(known_encoding, frame):
     except Exception:
         m = "Image no valida"
     return m
+
 
 class VideoCamera(object):
     def __init__(self):

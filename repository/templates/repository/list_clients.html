@@ -38,9 +38,11 @@
             <p>Aquest directori no té cap client.</p>
         {% endif %}
         <div class="text-center">
-            <a class="btn btn-primary" style="float: left; margin-right: 3px" href={% url 'repository:add_client' dir.id %}>Afegir
+            <a class="btn btn-primary" style="float: left; margin-right: 3px"
+               href={% url 'repository:add_client' dir.id %}>Afegir
                 Clients</a>
-            <a class="btn btn-primary" style="float: left;" href={% url 'repository:create_pass' dir.id %}>Crear un pase d'accés únic</a>
+            <a class="btn btn-primary" style="float: left;" href={% url 'repository:create_pass' dir.id %}>Crear un pase
+                d'accés únic</a>
         </div>
 
     {% endif %}

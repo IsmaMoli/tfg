@@ -1,15 +1,11 @@
-import os
-import shutil
-
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from repository.models import *
-from django.contrib.auth.models import User
-from django.contrib.auth import login, logout
 from django.contrib import messages
-from idverification.IdDetector import *
+from django.contrib.auth import login, logout
+from django.contrib.auth.models import User
 from django.http.response import StreamingHttpResponse
-import repository.views
+from django.shortcuts import render, redirect
+
+from idverification.IdDetector import *
+from repository.models import *
 
 camera_g = None
 face_frame_g = None
@@ -28,6 +24,19 @@ def home(request):
         except:
             pass
     logout(request=request)
+    global face_frame_g
+    global id_frame_g
+    global other_faces_g
+    global dir_id_g
+    global user_id_g
+    global credentials_path_g
+    camera_g = None
+    face_frame_g = None
+    id_frame_g = None
+    other_faces_g = None
+    dir_id_g = None
+    user_id_g = None
+    credentials_path_g = None
     cerca = request.GET.get("repository_search")
     resultats = []
     if cerca:
@@ -250,7 +259,8 @@ def save_attempt(request, user):
 
     num_attempt = LoginAttempt.objects.count()
 
-    attempt_path = os.path.join("C:/Users/User/Desktop/Uni/tfg/directories/"+dir_name+"/attempt_"+str(num_attempt))
+    attempt_path = os.path.join(
+        "C:/Users/User/Desktop/Uni/tfg/directories/" + dir_name + "/attempt_" + str(num_attempt))
     os.mkdir(attempt_path)
     result = True
 
@@ -290,7 +300,6 @@ def save_attempt(request, user):
                                               failed_frame3=failed_frame3_path, failed_frame4=failed_frame4_path,
                                               failed_frame5=failed_frame5_path)
         attempt.save()
-    #shutil.rmtree(attempt_path)
 
 
 def video_feed2(request):
