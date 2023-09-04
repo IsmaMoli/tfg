@@ -52,6 +52,8 @@ def add_admin(request, dir_id):
     if request.method == "GET":
         return render(request, "idverification/add_admin.html", {"dir": dir})
     if request.method == "POST":
+        if dir.admin_credentials:
+            dir.admin_credentials.delete()
         dir.admin_credentials = request.FILES.get('credentials')
         dir.save()
 
