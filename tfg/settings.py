@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'repository.apps.RepositoryConfig',
     'idverification.apps.IdverificationConfig',
-    'SecureRepositoryApp.apps.SecurerepositoryappConfig',
     'django_cleanup.apps.CleanupConfig',
     'django_extensions',
 ]
