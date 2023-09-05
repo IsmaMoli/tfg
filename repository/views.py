@@ -101,7 +101,7 @@ def add_client(request, dir_id):
 
 
 def delete_client(request, dir_id, client_id):
-    if Client.objects.get(id=client_id).exists():
+    if Client.objects.filter(id=client_id).exists():
         c = get_object_or_404(Client, id=client_id)
         c.delete()
 

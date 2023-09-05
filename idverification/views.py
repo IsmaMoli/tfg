@@ -1,3 +1,5 @@
+import os
+
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.models import User
@@ -224,7 +226,7 @@ def gen_frame2(request, camera):
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + result[1] + b'\r\n\r\n')
 
-        time.sleep(0.1)
+        time.sleep(0.01)
 
 
 def check_complete2(request):

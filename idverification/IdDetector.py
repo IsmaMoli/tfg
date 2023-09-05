@@ -150,7 +150,7 @@ class VideoCamera(object):
         self.video.release()
 
     def get_frame(self):
-        time.sleep(0.1)
+        time.sleep(0.01)
         image = None
         while image is None:
             success, image = self.video.read()
